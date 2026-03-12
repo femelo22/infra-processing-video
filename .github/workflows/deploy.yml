@@ -1,9 +1,118 @@
-name: Test CI
+name: Terraform CI/CD
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'terraform-bucket/**'
+      - 'terraform-rds/**'
+      - 'terraform-sqs/**'
 
 jobs:
-  test:
+  detect-changes:
     runs-on: ubuntu-latest
+    outputs:
+      s3: ${{ steps.filter.outputs.s3 }}
+      sqs: ${{ steps.filter.outputs.sqs }}
+      rds: ${{ steps.filter.outputs.rds }}
+
     steps:
-      - run: echo "CI funcionando"
+      - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            s3:
+              - 'terraform-bucket/**'
+            sqs:
+              - 'terraform-sqs/**'
+            rds:
+              - 'terraform-rds/**'
+
+
+  terraform-s3:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.s3 == 'true'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: s3-bucket
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Format
+        run: terraform fmt -check
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan
+
+      - name: Terraform Apply
+        if: github.event_name == 'push'
+        run: terraform apply -auto-approve
+
+
+  terraform-sqs:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.sqs == 'true'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: sqs-queue
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - run: terraform fmt -check
+      - run: terraform init
+      - run: terraform validate
+
+      - name: Terraform Plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan
+
+      - name: Terraform Apply
+        if: github.event_name == 'push'
+        run: terraform apply -auto-approve
+
+
+  terraform-rds:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.rds == 'true'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: rds-database
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - run: terraform fmt -check
+      - run: terraform init
+      - run: terraform validate
+
+      - name: Terraform Plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan
+
+      - name: Terraform Apply
+        if: github.event_name == 'push'
+        run: terraform apply -auto-approve
