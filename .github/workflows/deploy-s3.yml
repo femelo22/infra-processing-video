@@ -1,11 +1,15 @@
 name: Terraform S3
 
 on:
+  pull_request:
+    paths:
+      - "terraform-bucket/**"
+
   push:
     branches:
       - main
     paths:
-      - "/terraform-bucket/**"
+      - "terraform-bucket/**"
 
 jobs:
   terraform:
