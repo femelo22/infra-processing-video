@@ -3,6 +3,6 @@ bucket_name = "storage-files-bootcamp"
 environment = "dev"
 
 common_tags = {
-  Project     = "FIAP-BOOTCAMP"
+  Project     = "FIAP-BOOTCAMPP"
   Owner       = "DevOps Team"
 }
