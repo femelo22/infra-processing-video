@@ -1,0 +1,42 @@
+name: Terraform S3
+
+on:
+  pull_request:
+    paths:
+      - "terraform-bucket/**"
+  push:
+    branches:
+      - develop
+      - main
+    paths:
+      - "terraform-bucket/**"
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: terraform-bucket
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform fmt
+        run: terraform fmt -check
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform validate
+        run: terraform validate
+
+      - name: Terraform plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan
+
+      - name: Terraform apply
+        if: github.event_name == 'push'
+        run: terraform apply -auto-approve
