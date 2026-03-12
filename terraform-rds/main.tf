@@ -28,10 +28,10 @@ resource "aws_db_subnet_group" "this" {
 }
 
 resource "aws_db_instance" "this" {
-  identifier        = "${local.name_prefix}-mysql"
-  engine            = "mysql"
-  engine_version    = var.engine_version
-  instance_class    = var.instance_class
+  identifier     = "${local.name_prefix}-mysql"
+  engine         = "mysql"
+  engine_version = var.engine_version
+  instance_class = var.instance_class
 
   allocated_storage     = var.storage
   max_allocated_storage = var.max_storage
@@ -58,9 +58,9 @@ resource "aws_db_instance" "this" {
   enabled_cloudwatch_logs_exports = ["error", "slowquery"]
 
   auto_minor_version_upgrade = true
-  deletion_protection         = false
-  skip_final_snapshot         = false
-  final_snapshot_identifier   = "${local.name_prefix}-final"
+  deletion_protection        = false
+  skip_final_snapshot        = false
+  final_snapshot_identifier  = "${local.name_prefix}-final"
 
   tags = merge(var.common_tags, {
     Name        = "${local.name_prefix}-rds"
