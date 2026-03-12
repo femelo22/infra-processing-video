@@ -5,18 +5,18 @@ on:
     branches:
       - main
     paths:
-      - 's3-bucket/**'
-      - 'sqs-queue/**'
-      - 'rds-database/**'
+      - 'terraform-bucket/**'
+      - 'terraform-rds/**'
+      - 'terraform-sqs/**'
 
   push:
     branches:
       - develop
       - main
     paths:
-      - 's3-bucket/**'
-      - 'sqs-queue/**'
-      - 'rds-database/**'
+      - 'terraform-bucket/**'
+      - 'terraform-rds/**'
+      - 'terraform-sqs/**'
 
 jobs:
 
@@ -35,11 +35,11 @@ jobs:
         with:
           filters: |
             s3:
-              - 's3-bucket/**'
+              - 'terraform-bucket/**'
             sqs:
-              - 'sqs-queue/**'
+              - 'terraform-sqs/**'
             rds:
-              - 'rds-database/**'
+              - 'terraform-rds/**'
 
 
   terraform-s3:
