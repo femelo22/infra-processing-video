@@ -7,7 +7,7 @@ security_group_id = "sg-0b236c3371f7420be"
 
 db_name     = "apivideo"
 db_username = "admin"
-db_password = "sua-senha"
+db_password = "root"
 
 common_tags = {
   Project = "FIAP_BOOTCAMP"
