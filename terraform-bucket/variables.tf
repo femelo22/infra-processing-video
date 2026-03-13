@@ -9,7 +9,7 @@ variable "bucket_name" {
 }
 
 variable "environment" {
-  description = "Ambiente (dev, staging, prod)"
+  description = "Ambiente (dev, staging, prd)"
   type        = string
 }
 

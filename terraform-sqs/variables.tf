@@ -10,7 +10,7 @@ variable "queue_name" {
 
 variable "environment" {
   type        = string
-  description = "Ambiente (dev, staging, prod)"
+  description = "Ambiente (dev, staging, prd)"
 }
 
 variable "max_receive_count" {
